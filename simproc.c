@@ -1,7 +1,7 @@
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/init.h>
-#include <linux/kernel.h>   
+#include <linux/kernel.h>
 #include <linux/proc_fs.h>
 #include <asm/uaccess.h>
 #include <linux/uaccess.h>
@@ -19,7 +19,7 @@ module_param(mode,int,0660);
 
 static struct proc_dir_entry *ent;
 
-static ssize_t mywrite(struct file *file, const char __user *ubuf,size_t count, loff_t *ppos) 
+static ssize_t mywrite(struct file *file, const char __user *ubuf,size_t count, loff_t *ppos)
 {
 	int num,c,i,m;
 	char buf[BUFSIZE];
@@ -30,14 +30,14 @@ static ssize_t mywrite(struct file *file, const char __user *ubuf,size_t count, 
 	num = sscanf(buf,"%d %d",&i,&m);
 	if(num != 2)
 		return -EFAULT;
-	irq = i; 
+	irq = i;
 	mode = m;
 	c = strlen(buf);
 	*ppos = c;
 	return c;
 }
 
-static ssize_t myread(struct file *file, char __user *ubuf,size_t count, loff_t *ppos) 
+static ssize_t myread(struct file *file, char __user *ubuf,size_t count, loff_t *ppos)
 {
 	char buf[BUFSIZE];
 	int len=0;
@@ -45,18 +45,17 @@ static ssize_t myread(struct file *file, char __user *ubuf,size_t count, loff_t 
 		return 0;
 	len += sprintf(buf,"irq = %d\n",irq);
 	len += sprintf(buf + len,"mode = %d\n",mode);
-	
+
 	if(copy_to_user(ubuf,buf,len))
 		return -EFAULT;
 	*ppos = len;
 	return len;
 }
 
-static struct file_operations myops = 
+static struct proc_ops myops =
 {
-	.owner = THIS_MODULE,
-	.read = myread,
-	.write = mywrite,
+	.proc_read = myread,
+	.proc_write = mywrite,
 };
 
 static int simple_init(void)
