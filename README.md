@@ -97,6 +97,10 @@ mode = 4
 
 有个奇怪的问题：`sudo ./usertest` 好像不起作用？需要再研究
 
+用户态的 lseek 操作需要 driver 的支持，因此需要实现 proc_lseek
+
+如果没有的话，会返回 Illegal seek 的错误
+
 ## 参考链接
 
 [How to insmod ko on Fedora 42](https://discussion.fedoraproject.org/t/how-to-insmod-ko-on-fedora-42/152503)
@@ -106,3 +110,7 @@ mode = 4
 [dell/dkms](https://github.com/dell/dkms)
 
 [Kernel modules contain .ko.xz files](https://forum.manjaro.org/t/kernel-modules-contain-ko-xz-files/90019)
+
+[Illegal seek](https://unix.stackexchange.com/questions/783768/why-does-lseek-return-espipe-when-driver-doesnt-provide-implementation)
+
+[strerror](https://en.cppreference.com/w/cpp/string/byte/strerror)

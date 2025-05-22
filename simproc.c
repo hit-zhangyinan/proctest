@@ -52,10 +52,33 @@ static ssize_t myread(struct file *file, char __user *ubuf,size_t count, loff_t 
 	return len;
 }
 
+static loff_t myseek(struct file *file, loff_t offset, int whence)
+{
+    loff_t newpos = 0;
+    switch (whence) {
+        case SEEK_SET:
+            newpos = offset;
+            break;
+        case SEEK_CUR:
+            newpos = file->f_pos + offset;
+            break;
+        case SEEK_END:
+            newpos = BUFSIZE + offset;
+            break;
+        default:
+            return -EINVAL;
+    }
+    if (newpos < 0 || newpos > BUFSIZE)
+        return -EINVAL;
+    file->f_pos = newpos;
+    return newpos;
+}
+
 static struct proc_ops myops =
 {
 	.proc_read = myread,
 	.proc_write = mywrite,
+	.proc_lseek = myseek,
 };
 
 static int simple_init(void)
