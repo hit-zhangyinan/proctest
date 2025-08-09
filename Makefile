@@ -12,5 +12,5 @@ default:
 
 
 clean:
-	rm -rf *.o .depend .*.o .*.cmd *.ko *.mod.c .tmp_versions modules.order Module.symvers *.mod
+	rm -rf *.o .depend .*.o .*.cmd *.ko *.mod.c .tmp_versions modules.order Module.symvers *.mod .*.o.d
 
